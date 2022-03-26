@@ -42,9 +42,9 @@ public class PostController {
 	}
 	
 	@GetMapping("{postId}")
-	public Post getPost(@PathVariable Long id) {
+	public Post getPostById(@PathVariable Long id) {
 		// @PathVariable , burada ise parametreyi doğrudan alıp sağındaki değişkene atıyor.
-		return postService.getPost(id);
+		return postService.getPostById(id);
 	}
 	@PutMapping("{postId}")
 	public Post updatePost(@PathVariable Long postId ,@RequestBody PostUpdateRequest postUpdateRequest) {
