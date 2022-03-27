@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.spring1.entities.Post;
 import com.example.spring1.requests.PostCreateRequest;
 import com.example.spring1.requests.PostUpdateRequest;
+import com.example.spring1.responses.PostResponse;
 import com.example.spring1.services.PostService;
 
 
@@ -31,7 +32,7 @@ public class PostController {
 	}
 	
 	@GetMapping()
-	 public List<Post>  gettAllPosts(@RequestParam  Optional<Long> userId){ 
+	 public List<PostResponse>  gettAllPosts(@RequestParam  Optional<Long> userId){ 
 		//@RequestParam , request içindeki parametrelerini parse et ve sağında bulunan değişkenin içine at.
 		return postService.getAllPosts(userId);
 	}
