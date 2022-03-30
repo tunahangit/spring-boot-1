@@ -42,16 +42,16 @@ public class PostController {
 		return postService.createPost(newPost);
 	}
 	
-	@GetMapping("{postId}")
-	public Post getPostById(@PathVariable Long id) {
+	@GetMapping("/{postId}")
+	public Post getPostById(@PathVariable Long postId) {
 		// @PathVariable , burada ise parametreyi doğrudan alıp sağındaki değişkene atıyor.
-		return postService.getPostById(id);
+		return postService.getPostById(postId);
 	}
-	@PutMapping("{postId}")
+	@PutMapping("/{postId}")
 	public Post updatePost(@PathVariable Long postId ,@RequestBody PostUpdateRequest postUpdateRequest) {
 		return postService.updatePostById(postId , postUpdateRequest);
 	}
-	@DeleteMapping("{postId}")
+	@DeleteMapping("/{postId}")
 	public void deletePost(@PathVariable Long postId) {
 		postService.deletePostById(postId);
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.spring1.entities.Post;
@@ -11,6 +12,7 @@ import com.example.spring1.entities.User;
 import com.example.spring1.repos.PostRepository;
 import com.example.spring1.requests.PostCreateRequest;
 import com.example.spring1.requests.PostUpdateRequest;
+import com.example.spring1.responses.LikeResponse;
 import com.example.spring1.responses.PostResponse;
 
 @Service
@@ -18,10 +20,16 @@ public class PostService {
 	
 	 private PostRepository postRepository;
 	 private UserService userService;
+	 private LikeService likeService;
 	 
 	 public PostService(PostRepository postRepository , UserService userService) {
 		 this.postRepository=postRepository;
 		 this.userService=userService;
+	 }
+	 
+	 @Autowired
+	 public void setLikeService(LikeService likeService) {  //Üstte yazarsam like post'u çağıracak post da like'ı (döngü oluşacak )
+		 this.likeService=likeService; 
 	 }
 
 	public List<PostResponse> getAllPosts(Optional<Long> userId) {
@@ -30,12 +38,14 @@ public class PostService {
 			list=postRepository.findByUserId(userId.get());
 		}
 			list= postRepository.findAll();
-		return 	list.stream().map(p -> new PostResponse(p)).collect(Collectors.toList());
+		return 	list.stream().map(p -> { 
+		 List<LikeResponse> likeList=	likeService.getAllLikes(Optional.of(p.getId()),Optional.ofNullable(null));
+			return new PostResponse(p , likeList);}).collect(Collectors.toList());	
 		
 	}
 
-	public Post getPostById(Long id) {
-		return postRepository.findById(id).orElse(null);
+	public Post getPostById(Long postId) {
+		return postRepository.findById(postId).orElse(null);
 	}
 
 	public Post createPost(PostCreateRequest newPost) {

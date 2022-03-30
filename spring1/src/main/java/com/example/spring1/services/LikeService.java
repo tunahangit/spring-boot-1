@@ -2,6 +2,8 @@ package com.example.spring1.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,7 @@ import com.example.spring1.entities.Post;
 import com.example.spring1.entities.User;
 import com.example.spring1.repos.LikeRepository;
 import com.example.spring1.requests.LikeCreateRequest;
+import com.example.spring1.responses.LikeResponse;
 
 @Service
 public class LikeService {
@@ -24,15 +27,18 @@ public class LikeService {
 		this.userService=userService;
 	}
 
-	public List<Like> getAllLikes(Optional<Long> postId, Optional<Long> userId) {
+	public List<LikeResponse> getAllLikes(Optional<Long> postId, Optional<Long> userId) {
+		List<Like> list;
 		if(postId.isPresent() && userId.isPresent()) {
-			return likeRepository.findByUserIdAndPostId(userId.get(), postId.get());
+			list= likeRepository.findByUserIdAndPostId(userId.get(), postId.get());
 		}else if(userId.isPresent()) {
-			return likeRepository.findByUserId(userId.get());
+			list= likeRepository.findByUserId(userId.get());
 		}else if(postId.isPresent()) {
-			return likeRepository.findByPostId(postId.get());
+			list= likeRepository.findByPostId(postId.get());
 		}else
-		return likeRepository.findAll();
+	    	list= likeRepository.findAll();
+		
+	   return 	list.stream().map(like -> new LikeResponse(like)).collect(Collectors.toList());
 	}
 
 	public Like createLike(LikeCreateRequest likeCreateRequest) {

@@ -34,17 +34,17 @@ public class UserController {
 	public User saveUser(@RequestBody User newUser) {
 		return userService.saveUser(newUser);
 	}
-	@GetMapping("{userId}")
+	@GetMapping("/{userId}")
 	public User getUserById(@PathVariable Long userId) {
 		//custom exception
 		return userService.getUserById(userId);
 	}
 	
-	@PutMapping("{userId}")
+	@PutMapping("/{userId}")
 	public User updateUserById(@PathVariable Long userId , @RequestBody User updateUser) {
 		return userService.updateUserById(userId, updateUser);
 	}
-	@DeleteMapping("{userId}")
+	@DeleteMapping("/{userId}")
 	public void deleteUserById(@PathVariable Long userId) {
 	     userService.deleteUserById(userId);
 	}

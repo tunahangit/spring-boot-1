@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.spring1.entities.Like;
 import com.example.spring1.requests.LikeCreateRequest;
+import com.example.spring1.responses.LikeResponse;
 import com.example.spring1.services.LikeService;
 
 @RestController
@@ -27,7 +28,7 @@ public class LikeController {
 	}
 	
 	@GetMapping
-	public List<Like> getAllLikes(@RequestParam Optional<Long> postId , @RequestParam Optional<Long> userId){
+	public List<LikeResponse> getAllLikes(@RequestParam Optional<Long> postId , @RequestParam Optional<Long> userId){
 		return likeService.getAllLikes(postId , userId);
 	}
 	@PostMapping
