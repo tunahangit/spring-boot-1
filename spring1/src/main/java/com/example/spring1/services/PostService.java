@@ -1,5 +1,6 @@
 package com.example.spring1.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,6 +48,12 @@ public class PostService {
 	public Post getPostById(Long postId) {
 		return postRepository.findById(postId).orElse(null);
 	}
+	
+	public PostResponse getPostByIdWithLikes(Long postId) {
+		Post post = postRepository.findById(postId).orElse(null);
+		 List<LikeResponse> likeList=	likeService.getAllLikes(Optional.of(postId),Optional.ofNullable(null));
+		 return 	new PostResponse(post,likeList);
+	}
 
 	public Post createPost(PostCreateRequest newPost) {
 	 User user=	userService.getUserById(newPost.getUserId());
@@ -57,6 +64,7 @@ public class PostService {
 	 toSave.setTitle(newPost.getTitle());
 	 toSave.setText(newPost.getText());
 	 toSave.setUser(user);
+	 toSave.setCreateDate(new Date());
 	  return postRepository.save(toSave);
 	}
 
@@ -71,6 +79,11 @@ public class PostService {
 
 	public void deletePostById(Long postId) {
 		postRepository.deleteById(postId);
+	}
+	
+	public List<Long>  getPostIdsForUserService(Long userId){
+		return postRepository.findTopByUserId(userId);
+	
 	}
 	
 

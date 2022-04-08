@@ -43,9 +43,9 @@ public class PostController {
 	}
 	
 	@GetMapping("/{postId}")
-	public Post getPostById(@PathVariable Long postId) {
+	public PostResponse getPostById(@PathVariable Long postId) {
 		// @PathVariable , burada ise parametreyi doğrudan alıp sağındaki değişkene atıyor.
-		return postService.getPostById(postId);
+		return postService.getPostByIdWithLikes(postId);
 	}
 	@PutMapping("/{postId}")
 	public Post updatePost(@PathVariable Long postId ,@RequestBody PostUpdateRequest postUpdateRequest) {

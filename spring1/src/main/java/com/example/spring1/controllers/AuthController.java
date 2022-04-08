@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.spring1.entities.User;
 import com.example.spring1.requests.UserRequest;
+import com.example.spring1.responses.AuthResponse;
 import com.example.spring1.security.JwtTokenProvider;
 import com.example.spring1.services.UserService;
 
@@ -38,23 +39,31 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	 public String Login(@RequestBody UserRequest loginRequest) {
+	 public AuthResponse Login(@RequestBody UserRequest loginRequest) {
 		 UsernamePasswordAuthenticationToken  authToken = new  UsernamePasswordAuthenticationToken
 				 (loginRequest.getUsername(), loginRequest.getPassword());
 		 Authentication auth = authenticationManager.authenticate(authToken);
 		 SecurityContextHolder.getContext().setAuthentication(auth);
 		 String jwtToken = jwtTokenProvider.generateJwtToken(auth);
-		 return "Bearer " +  jwtToken;
+		 User user = userService.getUserByUserName(loginRequest.getUsername());
+		 AuthResponse authResponse  = new AuthResponse();
+		 authResponse.setMessage("Bearer " +  jwtToken);
+		 authResponse.setUserId(user.getId());
+		 return authResponse ;
 	 }
 	 
 	@PostMapping("/register")
-	public ResponseEntity<String> register(@RequestBody UserRequest registerRequest){
-		if(userService.getUserByUserName(registerRequest.getUsername()) != null)
-				return new ResponseEntity<>("Username already in use " , HttpStatus.BAD_REQUEST);
+	public ResponseEntity<AuthResponse> register(@RequestBody UserRequest registerRequest){
+		AuthResponse authResponse = new AuthResponse();
+		if(userService.getUserByUserName(registerRequest.getUsername()) != null) {
+			   authResponse.setMessage("Username already in use ");
+				return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
+		}
 		User user =new User();
 		user.setUsername(registerRequest.getUsername());
 		user.setPassword( passwordEncoder.encode(registerRequest.getPassword()) );
 		userService.saveUser(user);
-		return new ResponseEntity<>("User successfully registered" , HttpStatus.CREATED);
+		 authResponse.setMessage("Username already in use ");
+		return new ResponseEntity<>(authResponse , HttpStatus.CREATED);
 	}
 }

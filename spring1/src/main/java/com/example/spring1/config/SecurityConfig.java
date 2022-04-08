@@ -68,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        config.addAllowedMethod("OPTIONS");
 	        config.addAllowedMethod("HEAD");
 	        config.addAllowedMethod("GET");
-	        config.addAllowedMethod("PUT");
+	        config.addAllowedMethod("PUT");	
 	        config.addAllowedMethod("POST");
 	        config.addAllowedMethod("DELETE");
 	        config.addAllowedMethod("PATCH");
@@ -87,7 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    		.authorizeRequests()
 	    		.antMatchers(HttpMethod.GET, "/posts")
 	    		.permitAll()
-	    		.antMatchers(HttpMethod.GET, "/comments")
+	    		.antMatchers(HttpMethod.GET,"/comments")
 	    		.permitAll()
 	    		.antMatchers("/auth/**")
 	    		.permitAll()

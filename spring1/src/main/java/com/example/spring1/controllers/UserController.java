@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.spring1.entities.User;
+import com.example.spring1.responses.UserResponse;
 import com.example.spring1.services.UserService;
 
 
@@ -35,9 +36,9 @@ public class UserController {
 		return userService.saveUser(newUser);
 	}
 	@GetMapping("/{userId}")
-	public User getUserById(@PathVariable Long userId) {
+	public UserResponse getUserById(@PathVariable Long userId) {
 		//custom exception
-		return userService.getUserById(userId);
+		return new UserResponse(userService.getUserById(userId));
 	}
 	
 	@PutMapping("/{userId}")
@@ -47,5 +48,9 @@ public class UserController {
 	@DeleteMapping("/{userId}")
 	public void deleteUserById(@PathVariable Long userId) {
 	     userService.deleteUserById(userId);
+	}
+	@GetMapping("/activity/{userId}")
+	public List<Object> getUserActivity(@PathVariable Long userId){
+		return userService.getUserActivity(userId);
 	}
 }

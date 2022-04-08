@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.spring1.entities.Like;
@@ -21,10 +22,14 @@ public class LikeService {
 	private PostService postService;
 	private UserService userService;
 	
-	public LikeService(LikeRepository likeRepository , PostService postService , UserService userService) {
+	public LikeService(LikeRepository likeRepository ,  UserService userService) {
 		this.likeRepository=likeRepository;
-		this.postService=postService;
 		this.userService=userService;
+	}
+	
+	@Autowired
+	public void setPostService(PostService postService) {
+		this.postService=postService;
 	}
 
 	public List<LikeResponse> getAllLikes(Optional<Long> postId, Optional<Long> userId) {
@@ -60,7 +65,8 @@ public class LikeService {
 	public void deleteLikeById(Long likeId) {
 		likeRepository.deleteById(likeId);
 	}
-
-
 	
+	public List<Object> getLikesForUserService(List<Long> postIds){
+		return likeRepository.findUserLikesByPostId(postIds);
+	}
 }

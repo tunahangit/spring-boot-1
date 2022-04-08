@@ -1,5 +1,6 @@
 package com.example.spring1.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +50,7 @@ public class CommentService {
 		comment.setText(newComment.getText());
 		comment.setPost(post);
 		comment.setUser(user);
+		comment.setCreateDate(new Date());
 		return commentRepository.save(comment);
 	}
 
@@ -63,5 +65,9 @@ public class CommentService {
 
 	public void  deleteComment(Long commentId) {
 		commentRepository.deleteById(commentId);
+	}
+	
+	public List<Object> getCommentsForUserService(List<Long> postIds){
+		return commentRepository.findUserCommentsByPostId(postIds);
 	}
 }
