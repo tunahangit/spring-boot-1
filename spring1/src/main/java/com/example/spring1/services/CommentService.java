@@ -3,6 +3,7 @@ package com.example.spring1.services;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import com.example.spring1.entities.Post;
 import com.example.spring1.entities.User;
 import com.example.spring1.repos.CommentRepository;
 import com.example.spring1.requests.CommentCreateRequest;
+import com.example.spring1.responses.CommentResponse;
 
 @Service
 public class CommentService {
@@ -25,15 +27,17 @@ public class CommentService {
 		this.userService=userService;
 	}
 	
-	public List<Comment> getAllComments(Optional<Long> userId , Optional<Long> postId) {
+	public List<CommentResponse> getAllComments(Optional<Long> userId , Optional<Long> postId) {
+		List<Comment> comments;
 		    if(userId.isPresent() && postId.isPresent()) {
-		    	return commentRepository.findByUserIdAndPostId(userId.get(),postId.get());
+		    	comments= commentRepository.findByUserIdAndPostId(userId.get(),postId.get());
 		    }else if(userId.isPresent()) {
-		    	return commentRepository.findByUserId(userId.get());
+		    	comments= commentRepository.findByUserId(userId.get());
 		    }else if(postId.isPresent()) {
-		    	return commentRepository.findByPostId(postId.get());
-		    }else
-		       return commentRepository.findAll();
+		    	comments= commentRepository.findByPostId(postId.get());
+		    }else 
+		       comments= commentRepository.findAll();
+		      return comments.stream().map(c -> new CommentResponse(c)).collect(Collectors.toList());
 	}
 
 	public Comment getCommentById(Long commentId) {
